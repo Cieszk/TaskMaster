@@ -4,44 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import com.dsw.pam.taskmaster.database.TaskDatabase
+import com.dsw.pam.taskmaster.database.repository.TaskRepository
 import com.dsw.pam.taskmaster.ui.theme.TaskMasterTheme
+import com.dsw.pam.taskmaster.ui.view.TaskScreen
+import com.dsw.pam.taskmaster.viewmodel.TaskViewModel
+import com.dsw.pam.taskmaster.viewmodel.TaskViewModelFactory
 
 class MainActivity : ComponentActivity() {
+    private val viewModel by viewModels<TaskViewModel>() {
+        TaskViewModelFactory(TaskRepository(TaskDatabase.getDatabase(applicationContext).taskDao()))
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             TaskMasterTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                TaskScreen(viewModel)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TaskMasterTheme {
-        Greeting("Android")
     }
 }
