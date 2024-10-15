@@ -1,5 +1,6 @@
 package com.dsw.pam.taskmaster.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dsw.pam.taskmaster.database.model.Task
@@ -34,6 +35,7 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
                 val tasks = repository.getAllTasks()
                 _state.value = TaskState.Success(tasks)
             } catch (e: Exception) {
+                Log.d("TaskViewModel", "Error loading tasks", e)
                 _state.value = TaskState.Error("Failed to load tasks")
                 _effect.value = TaskEffect.ShowError("Error loading tasks")
             }
